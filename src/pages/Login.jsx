@@ -1,11 +1,11 @@
 import { useState } from "react";
 import API from "../api.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login(){
     const[form,setform] = useState({email:"", password:""});
     const[message,setMessage] = useState("");
-    
+      const navigate = useNavigate();
 
     const handleChange = (e) => setform({ ...form, [e.target.name]:e.target.value});
 
@@ -14,8 +14,13 @@ export default function Login(){
         try {
             const res = await API.post("/login",form);
             localStorage.setItem("token",res.data.token);
+             localStorage.setItem("user", JSON.stringify(res.data.user));
             setMessage("login success");
             console.log("stored token", res.data.token);
+
+             setTimeout(() => {
+        navigate("/dashboard");
+      }, 1000);
             
         } catch (error) {
             setMessage(error.response?.data?.message || "Error");
