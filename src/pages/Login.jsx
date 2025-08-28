@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../api.js";
+import {authAPI} from "../api.js";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Login(){
@@ -12,7 +12,7 @@ export default function Login(){
     const handlelogin = async (e) =>{
         e.preventDefault();
         try {
-            const res = await API.post("/login",form);
+            const res = await authAPI.post("/login",form);
             localStorage.setItem("token",res.data.token);
              localStorage.setItem("user", JSON.stringify(res.data.user));
             setMessage("login success");

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import API from "../api.js";
+import {authAPI} from "../api.js";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
@@ -13,7 +13,7 @@ export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/register", form);
+      const res = await authAPI.post("/register", form);
 
       setMessage(res.data.message || "✅ Registered successfully");
       setTimeout(() => {
