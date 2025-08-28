@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api";
 
+
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
   // fetch cart
   useEffect(() => {
@@ -19,6 +21,11 @@ export default function Cart() {
     };
     fetchCart();
   }, []);
+
+  useEffect(() => {
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  if (storedUser) setUser(storedUser);
+}, []);
 
   const updateQty = async (productId, qty) => {
     try {

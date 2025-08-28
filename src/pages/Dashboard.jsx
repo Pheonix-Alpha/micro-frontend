@@ -5,6 +5,11 @@ import { api } from "../api";
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [products, setProducts] = useState([]);
+    const [editingProfile, setEditingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({ name: "",
+    email: "",
+    phone: "",
+    address: "",});
   const [cart, setCart] = useState([]);
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
@@ -16,6 +21,16 @@ export default function Dashboard() {
     } else {
       const storedUser = JSON.parse(localStorage.getItem("user"));
       setUser(storedUser);
+       if (storedUser) {
+        setUser(storedUser);
+        setProfileForm({
+          name: storedUser.name || "",
+          email: storedUser.email || "",
+          phone: storedUser.phone || "",
+          address: storedUser.address || "",
+        });
+      }
+    
     }
   }, [navigate]);
 
@@ -83,20 +98,101 @@ export default function Dashboard() {
     return item ? item.qty : 0;
   };
 
+ const handleProfileSave = async () => {
+    try {
+      const res = await api.patch("/user/profile", {
+        name: profileForm.name,
+        phone: profileForm.phone,
+        address: profileForm.address,
+      });
+      alert("Profile updated!");
+      setUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      setEditingProfile(false);
+    } catch (err) {
+      console.error("Error updating profile:", err);
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-4xl mx-auto">
         {user ? (
           <>
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">Welcome, {user.name}! 🎉</h2>
-                <p className="text-gray-700">{user.email}</p>
-              </div>
+            <div className="flex justify-between items-center mb-4">
+              {editingProfile ? (
+                <div className="flex flex-col gap-2 w-full">
+                  <input
+                    type="text"
+                    name="name"
+                    value={profileForm.name}
+                    onChange={(e) =>
+                      setProfileForm({ ...profileForm, name: e.target.value })
+                    }
+                    className="border p-2 rounded"
+                    placeholder="Name"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    value={profileForm.email}
+                    readOnly
+                    className="border p-2 rounded bg-gray-100"
+                  />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={profileForm.phone}
+                    onChange={(e) =>
+                      setProfileForm({ ...profileForm, phone: e.target.value })
+                    }
+                    className="border p-2 rounded"
+                    placeholder="Phone"
+                  />
+                  <input
+                    type="text"
+                    name="address"
+                    value={profileForm.address}
+                    onChange={(e) =>
+                      setProfileForm({ ...profileForm, address: e.target.value })
+                    }
+                    className="border p-2 rounded"
+                    placeholder="Address"
+                  />
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      onClick={handleProfileSave}
+                      className="bg-green-600 text-white px-3 py-1 rounded"
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => setEditingProfile(false)}
+                      className="bg-gray-400 text-white px-3 py-1 rounded"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <h2 className="text-2xl font-bold mb-2">
+                    Welcome, {user.name}! 🎉
+                  </h2>
+                  <p className="mb-2 text-gray-700">{user.email}</p>
+                  <button
+                    onClick={() => setEditingProfile(true)}
+                    className="bg-yellow-500 text-white px-3 py-1 rounded"
+                  >
+                    Edit Profile
+                  </button>
+                </div>
+              )}
 
               <button
                 onClick={() => navigate("/cart")}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-blue-600 text-white px-4 py-2 rounded mb-4"
               >
                 Cart ({cart.reduce((sum, item) => sum + item.qty, 0)})
               </button>

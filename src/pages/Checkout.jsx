@@ -19,6 +19,8 @@ export default function Checkout() {
         ...prev,
         name: storedUser.name || "",
         email: storedUser.email || "",
+         phone: storedUser.phone || "",
+      address: storedUser.address || "",
       }));
     }
     // Fetch cart items
@@ -33,8 +35,16 @@ export default function Checkout() {
     fetchCart();
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Update localStorage if phone or address changes
+    if (name === "phone" || name === "address") {
+      const storedUser = JSON.parse(localStorage.getItem("user")) || {};
+      storedUser[name] = value;
+      localStorage.setItem("user", JSON.stringify(storedUser));
+    }
   };
 
   const handleSubmit = async (e) => {
