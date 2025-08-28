@@ -16,20 +16,19 @@ A **React** frontend for an e-commerce application with cart, checkout, and orde
 ## **Installation**
 
 ### 1. Clone the repository
-
-git clone https://github.com/Pheonix-Alpha/micro-frontend.git
-cd micro-frontend
-
+```bash
+git clone <your-repo-url>
+cd frontend
 ```
 
 ### 2. Install dependencies
-
+```bash
 npm install
 ```
 
 ### 3. Start development server
 ```bash
-npm run dev
+npm start
 ```
 
 The app will run on `http://localhost:3000`.

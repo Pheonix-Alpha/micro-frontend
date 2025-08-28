@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
- <nav className="bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
+ <nav className="fixed top-0 left-0 right-0 bg-gray-800 text-white px-6 py-4 flex justify-between items-center">
       {/* Logo */}
       <div className="text-2xl font-bold">
         <Link to="/">🌾 RuralConnect</Link>
